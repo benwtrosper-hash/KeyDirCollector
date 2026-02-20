@@ -1,0 +1,105 @@
+KeyDirCollector – Windows Build Instructions
+===========================================
+
+Goal:
+-----
+Build a portable Windows EXE that requires:
+- NO install on target machines
+- NO admin privileges
+- Runs directly from extracted folder
+
+Build type:
+-----------
+PyInstaller --onedir (RECOMMENDED)
+
+Reason:
+- Faster startup
+- Fewer antivirus false positives
+- No temporary extraction folder like --onefile
+- Minimal host artifacts
+
+------------------------------------------------------------
+STEP 1 – Create build environment
+------------------------------------------------------------
+
+Open Command Prompt in repo root:
+
+    py -m venv .venv
+
+Activate:
+
+    .\.venv\Scripts\activate
+
+Upgrade pip:
+
+    python -m pip install --upgrade pip
+
+Install PyInstaller:
+
+    python -m pip install pyinstaller
+
+
+------------------------------------------------------------
+STEP 2 – Build EXE
+------------------------------------------------------------
+
+From repo root:
+
+    pyinstaller --noconsole --onedir --name KeyDirCollector src\key_dir_collector.py
+
+
+------------------------------------------------------------
+STEP 3 – Add launcher (optional but recommended)
+------------------------------------------------------------
+
+Create file:
+
+    dist\KeyDirCollector\Run_KeyDirCollector.bat
+
+Contents:
+
+    @echo off
+    setlocal
+    cd /d %~dp0
+    start "" "%~dp0KeyDirCollector.exe"
+    endlocal
+
+
+------------------------------------------------------------
+STEP 4 – Package for Release
+------------------------------------------------------------
+
+Zip the entire folder:
+
+    dist\KeyDirCollector\
+
+Example ZIP name:
+
+    KeyDirCollector-v1.0.0-windows.zip
+
+
+------------------------------------------------------------
+STEP 5 – Upload to GitHub Release
+------------------------------------------------------------
+
+GitHub Repo:
+  Releases → Create new release
+
+Attach:
+  KeyDirCollector-v1.0.0-windows.zip
+
+
+------------------------------------------------------------
+NOTES
+------------------------------------------------------------
+
+- Target machines DO NOT need Python.
+- No installation required.
+- Just extract ZIP and run EXE.
+
+Artifacts created during build:
+- build/
+- dist/
+- *.spec
+
+These are ignored by .gitignore.
